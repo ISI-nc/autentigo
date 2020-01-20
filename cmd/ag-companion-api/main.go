@@ -14,11 +14,11 @@ import (
 	restful "github.com/emicklei/go-restful"
 	restfulspec "github.com/emicklei/go-restful-openapi"
 
-	companionapi "github.com/mcluseau/autentigo/pkg/companion-api/api"
-	"github.com/mcluseau/autentigo/pkg/companion-api/backend"
-	"github.com/mcluseau/autentigo/pkg/companion-api/backend/etcd"
-	"github.com/mcluseau/autentigo/pkg/companion-api/backend/users-file"
-	"github.com/mcluseau/autentigo/pkg/rbac"
+	companionapi "github.com/isi-nc/autentigo/pkg/companion-api/api"
+	"github.com/isi-nc/autentigo/pkg/companion-api/backend"
+	"github.com/isi-nc/autentigo/pkg/companion-api/backend/etcd"
+	"github.com/isi-nc/autentigo/pkg/companion-api/backend/users-file"
+	"github.com/isi-nc/autentigo/pkg/rbac"
 )
 
 var (

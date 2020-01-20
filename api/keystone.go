@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/emicklei/go-restful"
-	"github.com/mcluseau/autentigo/auth"
+	"github.com/isi-nc/autentigo/auth"
 )
 
 // KeystoneAuthReq is a Keystone API like auth request

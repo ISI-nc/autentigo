@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/mcluseau/autentigo/client"
+	"github.com/isi-nc/autentigo/client"
 )
 
 // GroupsFromToken returns the groups claimed by the token

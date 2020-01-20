@@ -13,8 +13,8 @@ import (
 	"github.com/coreos/etcd/clientv3"
 	jwt "github.com/dgrijalva/jwt-go"
 
-	"github.com/mcluseau/autentigo/api"
-	"github.com/mcluseau/autentigo/auth"
+	"github.com/isi-nc/autentigo/api"
+	"github.com/isi-nc/autentigo/auth"
 )
 
 // New Authenticator with etcd backend

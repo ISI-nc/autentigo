@@ -1,4 +1,4 @@
-module github.com/mcluseau/autentigo
+module github.com/isi-nc/autentigo
 
 require (
 	cloud.google.com/go v0.44.1 // indirect
@@ -64,3 +64,5 @@ require (
 	k8s.io/kube-openapi v0.0.0-20190722073852-5e22f3d471e6 // indirect
 	sigs.k8s.io/structured-merge-diff v0.0.0-20190724202554-0c1d754dd648 // indirect
 )
+
+go 1.13

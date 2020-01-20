@@ -9,8 +9,8 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/mcluseau/autentigo/api"
-	"github.com/mcluseau/autentigo/auth"
+	"github.com/isi-nc/autentigo/api"
+	"github.com/isi-nc/autentigo/auth"
 
 	_ "github.com/lib/pq"
 )

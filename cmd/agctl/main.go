@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/mcluseau/autentigo/client"
+	"github.com/isi-nc/autentigo/client"
 )
 
 var (

@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	restful "github.com/emicklei/go-restful"
-	"github.com/mcluseau/autentigo/pkg/companion-api/backend"
-	"github.com/mcluseau/autentigo/pkg/rbac"
+	"github.com/isi-nc/autentigo/pkg/companion-api/backend"
+	"github.com/isi-nc/autentigo/pkg/rbac"
 )
 
 // Register provide a restful.WebService from this API

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/mcluseau/autentigo/api"
+	"github.com/isi-nc/autentigo/api"
 )
 
 // New Authenticator with no backend

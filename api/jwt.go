@@ -5,7 +5,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 
-	"github.com/mcluseau/autentigo/auth"
+	"github.com/isi-nc/autentigo/auth"
 )
 
 func (api *API) createToken(user string, claims jwt.Claims) (*jwt.Token, string, error) {

@@ -172,7 +172,7 @@ func getAuthenticator() api.Authenticator {
 			requireEnv("MONGO_DATABASE", "mongo database"),
 			requireEnv("MONGO_COLLECTION", "mongo collection"),
 			requireEnv("MONGO_FIELD", "field where to look the user (default: _id)"),
-			requireEnv("MONGO_ENDPOINT", "etcd endpoint"))
+			requireEnv("MONGO_ENDPOINT", "mongo endpoint"))
 
 	case "sql":
 		return sql.New(

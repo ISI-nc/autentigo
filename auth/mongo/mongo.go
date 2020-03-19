@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
@@ -73,14 +74,23 @@ type User struct {
 }
 
 func (a *mongoAuth) Authenticate(user string, password string, expiresAt time.Time) (claims jwt.Claims, err error) {
-
 	ba := sha256.Sum256([]byte(password))
 	passwordHash := hex.EncodeToString(ba[:])
 
 	ctx, cancel := context.WithTimeout(context.Background(), a.timeout)
 	defer cancel()
 
-	filter := bson.M{a.field:user}
+	var filter interface{}
+	// special case for _id
+	if a.field == "_id" {
+		objectId, err := primitive.ObjectIDFromHex(user)
+		if err != nil {
+			return nil, api.ErrInvalidAuthentication
+		}
+		filter = bson.M{a.field: objectId}
+	}else {
+		filter = bson.M{a.field:user}
+	}
 
 	u := &User{}
 
@@ -95,7 +105,6 @@ func (a *mongoAuth) Authenticate(user string, password string, expiresAt time.Ti
 
 	err = sr.Decode(u)
 	if err != nil {
-		log.Printf("Error while decoding user %s from database", user)
 		err = api.ErrInvalidAuthentication
 		return
 	}

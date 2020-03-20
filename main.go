@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/isi-nc/autentigo/auth/mongo"
 	"log"
 	"net"
 	"net/http"
@@ -165,6 +166,14 @@ func getAuthenticator() api.Authenticator {
 		return etcd.New(
 			requireEnv("ETCD_PREFIX", "etcd prefix"),
 			strings.Split(requireEnv("ETCD_ENDPOINTS", "etcd endpoints"), ","))
+
+	case "mongo":
+		return mongo.New(
+			requireEnv("MONGO_DATABASE", "mongo database"),
+			requireEnv("MONGO_COLLECTION", "mongo collection"),
+			requireEnv("MONGO_FIELD", "field where to look the user (default: _id)"),
+			requireEnv("MONGO_ENDPOINT", "mongo endpoint"))
+
 	case "sql":
 		return sql.New(
 			requireEnv("SQL_DRIVER", "SQL driver (ex: postgres)"),

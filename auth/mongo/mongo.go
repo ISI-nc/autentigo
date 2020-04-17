@@ -69,7 +69,7 @@ var _ api.Authenticator = &mongoAuth{}
 
 // User describe an user stored in mongo
 type User struct {
-	PasswordHash string `json:"password_hash"`
+	PasswordHash string `json:"password_hash" bson:"password_hash"`
 	auth.ExtraClaims
 }
 
@@ -108,6 +108,7 @@ func (a *mongoAuth) Authenticate(user string, password string, expiresAt time.Ti
 		err = api.ErrInvalidAuthentication
 		return
 	}
+
 
 	if u.PasswordHash != passwordHash {
 		err = api.ErrInvalidAuthentication

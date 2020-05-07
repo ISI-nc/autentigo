@@ -70,6 +70,7 @@ var _ api.Authenticator = &mongoAuth{}
 // User describe an user stored in mongo
 type User struct {
 	PasswordHash string `json:"password_hash" bson:"password_hash"`
+	Groups       []string `json:"groups,omitempty" bson:"groups,omitempty"` //TODO why not on extraClaims ??
 	auth.ExtraClaims
 }
 
@@ -115,6 +116,8 @@ func (a *mongoAuth) Authenticate(user string, password string, expiresAt time.Ti
 		return
 	}
 
+	//TODO ugly, should be removed
+	u.ExtraClaims.Groups = u.Groups
 	claims = auth.Claims{
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),

@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/mcluseau/autentigo)](https://goreportcard.com/report/github.com/mcluseau/autentigo)
+[![Go Report Card](https://goreportcard.com/badge/github.com/isi-nc/autentigo)](https://goreportcard.com/report/github.com/isi-nc/autentigo)
 
 ## Running
 

@@ -2,7 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/isi-nc/autentigo/pkg/rbac"
+
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -17,7 +18,9 @@ import (
 	companionapi "github.com/isi-nc/autentigo/pkg/companion-api/api"
 	"github.com/isi-nc/autentigo/pkg/companion-api/backend"
 	"github.com/isi-nc/autentigo/pkg/companion-api/backend/etcd"
+	"github.com/isi-nc/autentigo/pkg/companion-api/backend/sql"
 	"github.com/isi-nc/autentigo/pkg/companion-api/backend/users-file"
+	"github.com/isi-nc/autentigo/pkg/rbac"
 )
 
 var (
@@ -105,6 +108,11 @@ func getBackEndClient() backend.Client {
 		return etcd.New(
 			requireEnv("ETCD_PREFIX", "etcd prefix"),
 			strings.Split(requireEnv("ETCD_ENDPOINTS", "etcd endpoints"), ","))
+	case "sql":
+		return sql.New(
+			requireEnv("SQL_DRIVER", "SQL driver (ex: postgres)"),
+			requireEnv("SQL_DSN", "SQL destination"),
+			requireEnv("SQL_USER_TABLE", "sql table with stored users"))
 	default:
 		log.Fatal("Unknown authenticator: ", v)
 		return nil

@@ -4,9 +4,7 @@
 
 ```
 openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout tls.key -out tls.crt -subj /CN=localhost
-export TLS_CRT="$(<tls.crt)" TLS_KEY="$(<tls.key)"
-export SIGNING_METHOD=RS256
-autentigo
+TLS_CRT="$(<test/tls.crt)" TLS_KEY="$(<test/tls.key)" SIGNING_METHOD=RS256 ./autentigo
 ```
 
 ### Request examples
@@ -157,6 +155,25 @@ Allowed extra claims in the etcd object:
 Looks up the user in the SQL database.
 
 Example:
+```sh
+docker run --name autentigo-postgres --network host -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -e POSTGRES_DB=postgres -p 5432:5432 -d postgres:12-alpine
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS auth_users(
+ID VARCHAR PRIMARY KEY NOT NULL,
+PASSWORD_HASH VARCHAR NOT NULL,
+DISPLAY_NAME VARCHAR NOT NULL,
+EMAIL VARCHAR NOT NULL,
+EMAIL_VERIFIED BOOLEAN,
+GROUPS VARCHAR NOT NULL
+);
+```
+
+```sql
+INSERT INTO auth_users(id,password_hash, display_name, email, email_verified, groups) VALUES('test-user','5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8','Test User','user@test.com',false,'group1,group2,group3');
+```
+
 ```sh
 AUTH_BACKEND=sql \
 SQL_DRIVER=postgres\

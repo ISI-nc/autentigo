@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -34,10 +35,17 @@ func New(driver, dsn, table string) api.Authenticator {
 		panic(err)
 	}
 
+	// try to connect
+	if err := db.Ping(); err != nil {
+		panic(err)
+	}
+
+	log.Println("Connected to the database...")
 	return &sqlAuth{
 		db:    db,
 		table: table,
 	}
+
 }
 
 var _ api.Authenticator = sqlAuth{}
@@ -54,8 +62,15 @@ func (sa sqlAuth) Authenticate(user, password string, expiresAt time.Time) (clai
 		QueryRow(query, user).
 		Scan(&u.Id, &u.PasswordHash, &u.DisplayName, &u.Email, &u.EmailVerified, &groups)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Printf("User %s not found", user)
+			err = api.ErrInvalidAuthentication
+			return
+		}
 		return
 	}
+
+
 	u.Groups = strings.Split(groups, ",")
 
 	if u.PasswordHash != passwordHash {

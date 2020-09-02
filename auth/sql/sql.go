@@ -61,9 +61,16 @@ func (sa sqlAuth) Authenticate(user, password string, expiresAt time.Time) (clai
 	err = sa.db.
 		QueryRow(query, user).
 		Scan(&u.Id, &u.PasswordHash, &u.DisplayName, &u.Email, &u.EmailVerified, &groups)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Printf("User %s not found", user)
+			err = api.ErrInvalidAuthentication
+			return
+		}
 		return
 	}
+
+
 	u.Groups = strings.Split(groups, ",")
 
 	if u.PasswordHash != passwordHash {

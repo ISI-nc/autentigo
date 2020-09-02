@@ -1,3 +1,5 @@
+DISCLAIMER: REWORK NEEDED ON RBAC
+
 ## Running
 
 #### With file backend
@@ -20,7 +22,7 @@ companion-api
 ### Flags
 
 ```
-companion-api --help
+ag-companion-api --help
 ```
 
 ### Environment
@@ -54,3 +56,7 @@ Please feel free to use a ldap client instead of the companion-api.
 #### etcd lookup
 
 Update or looks up the user in etcd, with a key like `prefix/user-name`. Takes an optionnal `ETCD_TIMEOUT` to change the lookup timeout.
+
+### RBAC
+
+It's possible to create some rbac rule with a file.

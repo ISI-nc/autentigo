@@ -49,27 +49,28 @@ func New(database string, collection string, field string, endpoint string) api.
 	}
 
 	return &mongoAuth{
-		database:  database,
+		database:   database,
 		collection: collection,
-		field: field,
-		client:  mongoc,
-		timeout: timeout,
+		field:      field,
+		client:     mongoc,
+		timeout:    timeout,
 	}
 }
 
 type mongoAuth struct {
-	database string
-	collection  string
-	field string
-	client  *mongo.Client
-	timeout time.Duration
+	database   string
+	collection string
+	field      string
+	client     *mongo.Client
+	timeout    time.Duration
 }
 
 var _ api.Authenticator = &mongoAuth{}
 
 // User describe an user stored in mongo
 type User struct {
-	PasswordHash string `json:"password_hash"`
+	PasswordHash string   `json:"password_hash" bson:"password_hash"`
+	Groups       []string `json:"groups,omitempty" bson:"groups,omitempty"` //TODO why not on extraClaims ??
 	auth.ExtraClaims
 }
 
@@ -88,8 +89,8 @@ func (a *mongoAuth) Authenticate(user string, password string, expiresAt time.Ti
 			return nil, api.ErrInvalidAuthentication
 		}
 		filter = bson.M{a.field: objectId}
-	}else {
-		filter = bson.M{a.field:user}
+	} else {
+		filter = bson.M{a.field: user}
 	}
 
 	u := &User{}
@@ -114,6 +115,8 @@ func (a *mongoAuth) Authenticate(user string, password string, expiresAt time.Ti
 		return
 	}
 
+	//TODO ugly, should be removed
+	u.ExtraClaims.Groups = u.Groups
 	claims = auth.Claims{
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),

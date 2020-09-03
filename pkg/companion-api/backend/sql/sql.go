@@ -19,24 +19,14 @@ type sqlClient struct {
 }
 
 func New(driver, dsn, table string) backend.Client {
-	db, err := sql.Open(driver, dsn)
-	if err != nil {
-		panic(err)
-	}
-
-	// try to connect
-	if err := db.Ping(); err != nil {
-		panic(err)
-	}
-
-	log.Println("Connected to the database...")
+	db := DbConnect(driver, dsn)
 
 	sqlClient := &sqlClient{
-		db:    db,
+		db: db,
 		table: table,
 	}
 
-	if err := sqlClient.createTableIfNotExists(); err != nil {
+	if err := CreateUsersTableIfNotExists(db, table); err != nil {
 		panic(err)
 	}
 
@@ -44,6 +34,10 @@ func New(driver, dsn, table string) backend.Client {
 }
 
 var _ backend.Client = &sqlClient{}
+
+func (s *sqlClient) GetUser(id string) (user *backend.UserData, err error) {
+	return s.getUser(id)
+}
 
 func (s *sqlClient) CreateUser(id string, user *backend.UserData) (err error) {
 	oldUser := &backend.UserData{}
@@ -85,7 +79,22 @@ func (s *sqlClient) DeleteUser(id string) (err error) {
 	return
 }
 
-func (s *sqlClient) createTableIfNotExists() (err error) {
+func DbConnect(driver, dsn string) *sql.DB {
+	db, err := sql.Open(driver, dsn)
+	if err != nil {
+		panic(err)
+	}
+
+	// try to connect
+	if err := db.Ping(); err != nil {
+		panic(err)
+	}
+
+	log.Println("Connected to the database...")
+	return db
+}
+
+func CreateUsersTableIfNotExists(db *sql.DB, table string) (err error) {
 
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s(" +
 		"id VARCHAR PRIMARY KEY NOT NULL," +
@@ -94,27 +103,28 @@ func (s *sqlClient) createTableIfNotExists() (err error) {
 		"email VARCHAR NOT NULL," +
 		"email_verified BOOLEAN," +
 		"groups VARCHAR NOT NULL" +
-		");", s.table)
+		");", table)
 
-	_, err = s.db.Exec(query)
+	_, err = db.Exec(query)
 
 	return
 }
 
-func (s *sqlClient) getUser(id string) (user *backend.UserData, err error) {
+func (s *sqlClient) getUser(id string) (u *backend.UserData, err error) {
 	//ctx, cancel := context.WithTimeout(context.Background(), e.timeout)
 	//defer cancel()
 
-	u := backend.UserData{}
 	groups := ""
 	query := fmt.Sprintf("select password_hash, display_name, email, email_verified, groups from %s where id=$1;", s.table)
+
+	u = &backend.UserData{}
+	//xtraClaims := auth.ExtraClaims{}
 
 	err = s.db.
 		QueryRow(query, id).
 		Scan(&u.PasswordHash, &u.ExtraClaims.DisplayName, &u.ExtraClaims.Email, &u.ExtraClaims.EmailVerified, &groups)
 	if err != nil {
-		err = api.ErrMissingUser
-		return
+		return nil, api.ErrMissingUser
 	}
 
 	u.ExtraClaims.Groups = strings.Split(groups, ",")

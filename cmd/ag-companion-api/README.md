@@ -1,3 +1,5 @@
+DISCLAIMER: REWORK NEEDED ON RBAC
+
 ## Running
 
 #### With file backend
@@ -26,7 +28,7 @@ AUTH_BACKEND=sql SQL_DRIVER=postgres SQL_USER_TABLE=auth_users SQL_DSN="user=pos
 ### Flags
 
 ```
-companion-api --help
+ag-companion-api --help
 ```
 
 ### Environment
@@ -67,3 +69,6 @@ Update or looks up the user in etcd, with a key like `prefix/user-name`. Takes a
 curl -i -H'Content-Type: application/json' -H 'Authorization: Bearer toto' localhost:8181/users -d '{"id":"hahaguy","user":{"password":"5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8","display_name":"Hahaguy","email":"hahaguy@toto.net","email_verified":false,"groups":["self-service"]}}'
 curl -i --basic --user hahaguy:password localhost:8080/basic
 ```
+### RBAC
+
+It's possible to create some rbac rule with a file.

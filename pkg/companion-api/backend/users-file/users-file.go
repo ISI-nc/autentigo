@@ -1,6 +1,7 @@
 package usersfile
 
 import (
+	"github.com/google/go-cmp/cmp"
 	"io"
 	"strconv"
 	"strings"
@@ -40,7 +41,7 @@ func (fc *fileClient) CreateUser(id string, user *backend.UserData) (err error) 
 
 	if oldUser != nil {
 		err = api.ErrUserAlreadyExist
-	} else if err == api.ErrMissingUser {
+	} else if cmp.Equal(err, api.ErrMissingUser) {
 		err = fc.putUser(id, user.PasswordHash, user.ExtraClaims)
 	}
 

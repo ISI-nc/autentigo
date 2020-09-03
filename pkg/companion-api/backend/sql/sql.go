@@ -3,6 +3,7 @@ package sql
 import (
 	"database/sql"
 	"fmt"
+	"github.com/google/go-cmp/cmp"
 	"log"
 	"strings"
 
@@ -50,7 +51,7 @@ func (s *sqlClient) CreateUser(id string, user *backend.UserData) (err error) {
 
 	if oldUser != nil {
 		err = api.ErrUserAlreadyExist
-	} else if err == api.ErrMissingUser {
+	} else if cmp.Equal(err, api.ErrMissingUser) {
 		err = s.createUser(id, user)
 	}
 

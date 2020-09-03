@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	restful "github.com/emicklei/go-restful"
+	restful "github.com/emicklei/go-restful/v3"
 	"github.com/isi-nc/autentigo/pkg/companion-api/backend"
 )
 

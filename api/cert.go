@@ -1,6 +1,6 @@
 package api
 
-import restful "github.com/emicklei/go-restful"
+import restful "github.com/emicklei/go-restful/v3"
 
 func (api *API) registerCertificate(ws *restful.WebService) {
 	ws.

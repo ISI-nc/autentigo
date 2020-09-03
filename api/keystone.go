@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/emicklei/go-restful"
+	"github.com/emicklei/go-restful/v3"
 	"github.com/isi-nc/autentigo/auth"
 )
 

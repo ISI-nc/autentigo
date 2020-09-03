@@ -3,6 +3,7 @@ package etcd
 import (
 	"context"
 	"encoding/json"
+	"github.com/google/go-cmp/cmp"
 	"log"
 	"os"
 	"path"
@@ -52,7 +53,7 @@ func (e *etcdClient) CreateUser(id string, user *backend.UserData) (err error) {
 
 	if oldUser != nil {
 		err = api.ErrUserAlreadyExist
-	} else if err == api.ErrMissingUser {
+	} else if cmp.Equal(err,api.ErrMissingUser) {
 		err = e.putUser(id, user)
 	}
 

@@ -10,6 +10,5 @@ RUN set -ex; \
 
 FROM alpine
 RUN apk add --no-cache curl tzdata
-ENV TZ=Pacific/Noumea
 ENTRYPOINT ["/bin/autentigo"]
 COPY --from=build-env /go/bin/ /bin/

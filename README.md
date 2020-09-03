@@ -206,3 +206,7 @@ MONGO_COLLECTION=users \
 MONGO_FIELD=email \
 autentigo
 ```
+
+### Testing
+
+You need docker to test because it will automatically download and start a postgres server.

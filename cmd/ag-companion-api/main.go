@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 
-	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -24,11 +23,9 @@ import (
 )
 
 var (
-	bind              = flag.String("bind", ":8181", "HTTP bind specification")
-	disableCORS       = flag.Bool("no-cors", false, "Disable CORS support")
+	bind              = flag.String("bind", ":8080", "HTTP bind specification")
 	rbacFile          = flag.String("rbac-file", "/etc/autentigo/rbac.yaml", "HTTP bind specification")
-	validationCrtPath = flag.String("validation-cert", "/etc/autentigo/ag.crt", "Certificate to validate tokens")
-	adminToken        = flag.String("admin-token", "", "Administration token, useful when no users are defined")
+	disableCORS       = flag.Bool("no-cors", false, "Disable CORS support")
 
 	validationCrt []byte
 )
@@ -38,20 +35,21 @@ func main() {
 
 	var err error
 
+	crtData := requireEnv("TLS_CRT", "certificate used to validate tokens")
+	adminToken := requireEnv("ADMIN_TOKEN", "Admin token")
+
 	if rbac.Default, err = rbac.FromFile(*rbacFile); err != nil {
 		log.Fatal("failed to load RBAC rules: ", err)
 	}
 
-	// TODO rework needed
-	// TODO use ENV instead of ARG, default to same crt as autentigo
-	// TODO write docs/examples
-	//if rbac.DefaultValidationCertificate, err = ioutil.ReadFile(*validationCrtPath); err != nil {
-	//	log.Fatal("failed to read validation certificate: ", err)
-	//}
+	if len(crtData) == 0 {
+		log.Fatal("Certificate empty, failed to load")
+	}
+	rbac.DefaultValidationCertificate = []byte(crtData)
 
 	cAPI := &companionapi.CompanionAPI{
 		Client:     getBackEndClient(),
-		AdminToken: *adminToken,
+		AdminToken: adminToken,
 	}
 
 	restful.DefaultRequestContentType(restful.MIME_JSON)

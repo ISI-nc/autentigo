@@ -8,6 +8,8 @@ import (
 
 	"github.com/isi-nc/autentigo/pkg/companion-api/api"
 	"github.com/isi-nc/autentigo/pkg/companion-api/backend"
+
+	_ "github.com/lib/pq"
 )
 
 type sqlClient struct {

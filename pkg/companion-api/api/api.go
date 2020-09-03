@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	restful "github.com/emicklei/go-restful"
+	restful "github.com/emicklei/go-restful/v3"
 	"github.com/isi-nc/autentigo/pkg/companion-api/backend"
 	"github.com/isi-nc/autentigo/pkg/rbac"
 )
@@ -30,6 +30,7 @@ type CompanionAPI struct {
 // Register provide a restful.WebService from this API
 func (cApi *CompanionAPI) WebServices() []*restful.WebService {
 	return []*restful.WebService{
+		cApi.healthWS(),
 		cApi.meWS(),
 		cApi.usersWS(),
 	}

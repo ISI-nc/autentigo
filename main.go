@@ -13,8 +13,8 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	restful "github.com/emicklei/go-restful"
-	restfulspec "github.com/emicklei/go-restful-openapi"
+	restfulspec "github.com/emicklei/go-restful-openapi/v2"
+	restful "github.com/emicklei/go-restful/v3"
 
 	"github.com/isi-nc/autentigo/api"
 	"github.com/isi-nc/autentigo/auth/etcd"

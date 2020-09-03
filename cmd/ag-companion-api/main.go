@@ -11,8 +11,8 @@ import (
 	"strings"
 	"syscall"
 
-	restful "github.com/emicklei/go-restful"
-	restfulspec "github.com/emicklei/go-restful-openapi"
+	restfulspec "github.com/emicklei/go-restful-openapi/v2"
+	restful "github.com/emicklei/go-restful/v3"
 
 	companionapi "github.com/isi-nc/autentigo/pkg/companion-api/api"
 	"github.com/isi-nc/autentigo/pkg/companion-api/backend"
@@ -23,7 +23,7 @@ import (
 )
 
 var (
-	bind              = flag.String("bind", ":8080", "HTTP bind specification")
+	bind              = flag.String("bind", ":8181", "HTTP bind specification")
 	rbacFile          = flag.String("rbac-file", "/etc/autentigo/rbac.yaml", "HTTP bind specification")
 	disableCORS       = flag.Bool("no-cors", false, "Disable CORS support")
 

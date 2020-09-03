@@ -45,7 +45,6 @@ func New(driver, dsn, table string) api.Authenticator {
 		db:    db,
 		table: table,
 	}
-
 }
 
 var _ api.Authenticator = sqlAuth{}

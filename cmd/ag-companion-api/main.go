@@ -23,7 +23,7 @@ import (
 )
 
 var (
-	bind              = flag.String("bind", ":8080", "HTTP bind specification")
+	bind              = flag.String("bind", ":8181", "HTTP bind specification")
 	rbacFile          = flag.String("rbac-file", "/etc/autentigo/rbac.yaml", "HTTP bind specification")
 	disableCORS       = flag.Bool("no-cors", false, "Disable CORS support")
 

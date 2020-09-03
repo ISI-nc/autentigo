@@ -30,6 +30,7 @@ type CompanionAPI struct {
 // Register provide a restful.WebService from this API
 func (cApi *CompanionAPI) WebServices() []*restful.WebService {
 	return []*restful.WebService{
+		cApi.healthWS(),
 		cApi.meWS(),
 		cApi.usersWS(),
 	}

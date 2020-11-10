@@ -41,6 +41,7 @@ func main() {
 
 	if os.Getenv("DISABLE_SECURITY") == "true" {
 		*disableSecurity = true
+		log.Println("Security disabled...")
 	} else {
 		*adminToken = requireEnv("ADMIN_TOKEN", "Admin token")
 	}

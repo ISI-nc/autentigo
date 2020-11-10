@@ -20,7 +20,7 @@ func (cApi *CompanionAPI) usersWS() (ws *restful.WebService) {
 	ws.Path("/users")
 	ws.Doc("Requires the admin role")
 
-	if cApi.DisableSecurity {
+	if !cApi.DisableSecurity {
 		ws.Filter(requireRole(cApi.AdminToken, "admin"))
 	}
 

@@ -23,9 +23,11 @@ import (
 )
 
 var (
-	bind              = flag.String("bind", ":8181", "HTTP bind specification")
-	rbacFile          = flag.String("rbac-file", "/etc/autentigo/rbac.yaml", "HTTP bind specification")
-	disableCORS       = flag.Bool("no-cors", false, "Disable CORS support")
+	bind            = flag.String("bind", ":8181", "HTTP bind specification")
+	rbacFile        = flag.String("rbac-file", "/etc/autentigo/rbac.yaml", "HTTP bind specification")
+	disableCORS     = flag.Bool("no-cors", false, "Disable CORS support")
+	adminToken      = flag.String("admin-token", "", "Admin Token")
+	disableSecurity = flag.Bool("no-security", false, "Disable security, no auth required to call companion-api")
 
 	validationCrt []byte
 )
@@ -36,7 +38,12 @@ func main() {
 	var err error
 
 	crtData := requireEnv("TLS_CRT", "certificate used to validate tokens")
-	adminToken := requireEnv("ADMIN_TOKEN", "Admin token")
+
+	if os.Getenv("DISABLE_SECURITY") == "true" {
+		*disableSecurity = true
+	} else {
+		*adminToken = requireEnv("ADMIN_TOKEN", "Admin token")
+	}
 
 	if rbac.Default, err = rbac.FromFile(*rbacFile); err != nil {
 		log.Fatal("failed to load RBAC rules: ", err)
@@ -49,7 +56,8 @@ func main() {
 
 	cAPI := &companionapi.CompanionAPI{
 		Client:     getBackEndClient(),
-		AdminToken: adminToken,
+		AdminToken: *adminToken,
+		DisableSecurity: *disableSecurity,
 	}
 
 	restful.DefaultRequestContentType(restful.MIME_JSON)

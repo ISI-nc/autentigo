@@ -25,6 +25,7 @@ var (
 type CompanionAPI struct {
 	Client     backend.Client
 	AdminToken string
+	DisableSecurity bool
 }
 
 // Register provide a restful.WebService from this API

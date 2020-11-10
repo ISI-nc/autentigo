@@ -18,8 +18,11 @@ type CreateUserReq struct {
 func (cApi *CompanionAPI) usersWS() (ws *restful.WebService) {
 	ws = &restful.WebService{}
 	ws.Path("/users")
-	ws.Filter(requireRole(cApi.AdminToken, "admin"))
 	ws.Doc("Requires the admin role")
+
+	if !cApi.DisableSecurity {
+		ws.Filter(requireRole(cApi.AdminToken, "admin"))
+	}
 
 	ws.
 		Route(ws.POST("/").

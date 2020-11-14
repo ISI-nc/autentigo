@@ -30,7 +30,7 @@ var (
 	tlsBind       = flag.String("tls-bind", ":8443", "HTTPS bind specification")
 	tlsKeyFile    = flag.String("tls-bind-key", "", "File containing the TLS listener's key")
 	tlsCertFile   = flag.String("tls-bind-cert", "", "File containing the TLS listener's certificate")
-	disableCORS   = flag.Bool("no-cors", false, "Disable CORS support")
+	enableCors   = flag.Bool("cors", true, "Enable CORS support")
 )
 
 func main() {
@@ -59,12 +59,21 @@ func main() {
 	}
 	restful.DefaultContainer.Add(restfulspec.NewOpenAPIService(config))
 
-	if !*disableCORS {
-		restful.Filter(restful.CrossOriginResourceSharing{
-			CookiesAllowed: true,
-			Container:      restful.DefaultContainer,
-		}.Filter)
+	if *enableCors {
+		log.Println("CORS enabled...")
+		// Add container filter to enable CORS
+		cors := restful.CrossOriginResourceSharing{
+			ExposeHeaders:  []string{"X-My-Header"},
+			AllowedHeaders: []string{"Content-Type", "Accept","Authorization"},
+			AllowedMethods: []string{"GET", "POST", "OPTIONS"},
+			AllowedDomains: []string{"http://localhost:3000"},
+			CookiesAllowed: false,
+			Container:      restful.DefaultContainer}
+		restful.DefaultContainer.Filter(cors.Filter)
+		// Add container filter to respond to OPTIONS
+		restful.DefaultContainer.Filter(restful.DefaultContainer.OPTIONSFilter)
 	}
+	restful.EnableTracing(true)
 
 	l, err := net.Listen("tcp", *bind)
 	if err != nil {

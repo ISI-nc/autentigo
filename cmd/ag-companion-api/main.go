@@ -25,11 +25,9 @@ import (
 var (
 	bind            = flag.String("bind", ":8181", "HTTP bind specification")
 	rbacFile        = flag.String("rbac-file", "/etc/autentigo/rbac.yaml", "HTTP bind specification")
-	disableCORS     = flag.Bool("no-cors", false, "Disable CORS support")
 	adminToken      = flag.String("admin-token", "", "Admin Token")
 	disableSecurity = flag.Bool("no-security", false, "Disable security, no auth required to call companion-api")
-
-	validationCrt []byte
+	enableCors      = flag.Bool("cors", false, "Enable CORS support")
 )
 
 func main() {
@@ -56,8 +54,8 @@ func main() {
 	rbac.DefaultValidationCertificate = []byte(crtData)
 
 	cAPI := &companionapi.CompanionAPI{
-		Client:     getBackEndClient(),
-		AdminToken: *adminToken,
+		Client:          getBackEndClient(),
+		AdminToken:      *adminToken,
 		DisableSecurity: *disableSecurity,
 	}
 
@@ -75,11 +73,20 @@ func main() {
 	}
 	restful.Add(restfulspec.NewOpenAPIService(config))
 
-	if !*disableCORS {
-		restful.Filter(restful.CrossOriginResourceSharing{
-			CookiesAllowed: true,
-			Container:      restful.DefaultContainer,
-		}.Filter)
+	if *enableCors {
+		log.Println("CORS enabled...")
+		// Add container filter to enable CORS
+		cors := restful.CrossOriginResourceSharing{
+			ExposeHeaders:  []string{"X-My-Header"},
+			AllowedHeaders: []string{"Content-Type", "Accept", "Authorization"},
+			AllowedMethods: []string{"GET", "POST", "OPTIONS"},
+			AllowedDomains: []string{"http://localhost:3000"},
+			CookiesAllowed: false,
+			Container:      restful.DefaultContainer}
+		restful.DefaultContainer.Filter(cors.Filter)
+		// Add container filter to respond to OPTIONS
+		restful.DefaultContainer.Filter(restful.DefaultContainer.OPTIONSFilter)
+		restful.EnableTracing(true)
 	}
 
 	l, err := net.Listen("tcp", *bind)

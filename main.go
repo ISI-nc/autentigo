@@ -25,12 +25,12 @@ import (
 )
 
 var (
-	tokenDuration = flag.Duration("token-duration", 1*time.Hour, "Duration of emitted tokens")
+	tokenDuration = flag.Duration("token-duration", 24*time.Hour, "Duration of emitted tokens")
 	bind          = flag.String("bind", ":8080", "HTTP bind specification")
 	tlsBind       = flag.String("tls-bind", ":8443", "HTTPS bind specification")
 	tlsKeyFile    = flag.String("tls-bind-key", "", "File containing the TLS listener's key")
 	tlsCertFile   = flag.String("tls-bind-cert", "", "File containing the TLS listener's certificate")
-	enableCors   = flag.Bool("cors", true, "Enable CORS support")
+	enableCors   = flag.Bool("cors", false, "Enable CORS support")
 )
 
 func main() {
@@ -72,8 +72,8 @@ func main() {
 		restful.DefaultContainer.Filter(cors.Filter)
 		// Add container filter to respond to OPTIONS
 		restful.DefaultContainer.Filter(restful.DefaultContainer.OPTIONSFilter)
+		restful.EnableTracing(true)
 	}
-	restful.EnableTracing(true)
 
 	l, err := net.Listen("tcp", *bind)
 	if err != nil {

@@ -87,7 +87,7 @@ func (e *etcdClient) DeleteUser(id string) (err error) {
 	return
 }
 
-func (e *etcdClient) getUser(id string) (user *backend.UserData, err error) {
+func (e *etcdClient) getUser(id string) (userData *backend.UserData, err error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), e.timeout)
 	defer cancel()
@@ -102,8 +102,9 @@ func (e *etcdClient) getUser(id string) (user *backend.UserData, err error) {
 		return
 	}
 
-	user = &backend.UserData{}
+	user := &backend.User{}
 	err = json.Unmarshal(resp.Kvs[0].Value, user)
+	userData = user.ToUserData()
 	return
 }
 
@@ -111,7 +112,7 @@ func (e *etcdClient) putUser(id string, user *backend.UserData) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), e.timeout)
 	defer cancel()
 
-	u, err := json.Marshal(*user)
+	u, err := json.Marshal(*user.ToUser())
 	if err == nil {
 		_, err = e.client.Put(ctx, path.Join(e.prefix, id), string(u))
 	}

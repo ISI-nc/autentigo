@@ -79,6 +79,8 @@ func (a *etcdAuth) Authenticate(user, password string, expiresAt time.Time) (cla
 		return
 	}
 
+	log.Printf("User: %s, password: %s, hash: %s, hashDb: %s", user, password, passwordHash, u.PasswordHash)
+
 	if u.PasswordHash != passwordHash {
 		err = api.ErrInvalidAuthentication
 		return

@@ -8,7 +8,7 @@ RUN set -ex; \
   if grep -q '^package main *' *.go; then go install .; fi; \
   if [ -d cmd ]; then go install ./cmd/...; fi
 
-FROM alpine
+FROM alpine:3.15
 RUN apk add --no-cache curl tzdata
 ENTRYPOINT ["/bin/autentigo"]
 COPY --from=build-env /go/bin/ /bin/

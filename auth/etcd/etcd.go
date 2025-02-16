@@ -10,8 +10,8 @@ import (
 	"path"
 	"time"
 
-	"github.com/coreos/etcd/clientv3"
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/golang-jwt/jwt/v4"
+	clientv3 "go.etcd.io/etcd/client/v3"
 
 	"github.com/isi-nc/autentigo/api"
 	"github.com/isi-nc/autentigo/auth"

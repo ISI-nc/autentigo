@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"github.com/isi-nc/autentigo/auth/mongo"
 	"log"
 	"net"
 	"net/http"
@@ -12,13 +11,13 @@ import (
 	"syscall"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	restful "github.com/emicklei/go-restful/v3"
-
+	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/isi-nc/autentigo/api"
 	"github.com/isi-nc/autentigo/auth/etcd"
 	ldapbind "github.com/isi-nc/autentigo/auth/ldap-bind"
+	"github.com/isi-nc/autentigo/auth/mongo"
 	"github.com/isi-nc/autentigo/auth/sql"
 	stupidauth "github.com/isi-nc/autentigo/auth/stupid-auth"
 	usersfile "github.com/isi-nc/autentigo/auth/users-file"
@@ -30,7 +29,7 @@ var (
 	tlsBind       = flag.String("tls-bind", ":8443", "HTTPS bind specification")
 	tlsKeyFile    = flag.String("tls-bind-key", "", "File containing the TLS listener's key")
 	tlsCertFile   = flag.String("tls-bind-cert", "", "File containing the TLS listener's certificate")
-	enableCors   = flag.Bool("cors", false, "Enable CORS support")
+	enableCors    = flag.Bool("cors", false, "Enable CORS support")
 )
 
 func main() {
@@ -64,7 +63,7 @@ func main() {
 		// Add container filter to enable CORS
 		cors := restful.CrossOriginResourceSharing{
 			ExposeHeaders:  []string{"X-My-Header"},
-			AllowedHeaders: []string{"Content-Type", "Accept","Authorization"},
+			AllowedHeaders: []string{"Content-Type", "Accept", "Authorization"},
 			AllowedMethods: []string{"GET", "POST", "OPTIONS"},
 			AllowedDomains: []string{"http://localhost:3000"},
 			CookiesAllowed: false,

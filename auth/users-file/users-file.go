@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/golang-jwt/jwt/v4"
 
 	"github.com/isi-nc/autentigo/api"
 	"github.com/isi-nc/autentigo/auth"

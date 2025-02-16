@@ -4,17 +4,18 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	"os"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+
 	"go.mongodb.org/mongo-driver/mongo"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/golang-jwt/jwt/v4"
 
 	"github.com/isi-nc/autentigo/api"
 	"github.com/isi-nc/autentigo/auth"
@@ -31,7 +32,8 @@ func New(database string, collection string, field string, endpoint string) api.
 	}
 
 	// create client
-	ctx, _ := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 	mongoc, err := mongo.Connect(ctx, options.Client().ApplyURI(endpoint))
 	if err != nil {
 		log.Fatal("failed to create mongo client: ", err)

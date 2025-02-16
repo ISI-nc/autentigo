@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/emicklei/go-restful/v3"
+	jwt "github.com/golang-jwt/jwt/v4"
 )
 
 func (api *API) registerSimple(ws *restful.WebService) {

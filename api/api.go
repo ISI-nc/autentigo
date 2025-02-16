@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 var (

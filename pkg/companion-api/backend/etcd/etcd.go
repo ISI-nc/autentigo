@@ -3,15 +3,15 @@ package etcd
 import (
 	"context"
 	"encoding/json"
-	"github.com/google/go-cmp/cmp"
 	"log"
 	"os"
 	"path"
 	"time"
 
-	"github.com/coreos/etcd/clientv3"
+	"github.com/google/go-cmp/cmp"
 	"github.com/isi-nc/autentigo/pkg/companion-api/api"
 	"github.com/isi-nc/autentigo/pkg/companion-api/backend"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type etcdClient struct {
@@ -53,7 +53,7 @@ func (e *etcdClient) CreateUser(id string, user *backend.UserData) (err error) {
 
 	if oldUser != nil {
 		err = api.ErrUserAlreadyExist
-	} else if cmp.Equal(err,api.ErrMissingUser) {
+	} else if cmp.Equal(err, api.ErrMissingUser) {
 		err = e.putUser(id, user)
 	}
 
